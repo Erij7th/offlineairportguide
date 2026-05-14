@@ -11,6 +11,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 COPY . /app/
 
+RUN python manage.py collectstatic --noinput
+
 EXPOSE 8080
 
 CMD ["gunicorn", "--bind", "0.0.0.0:8080", "offline_airport_help.wsgi:application"]
