@@ -98,6 +98,17 @@
         </footer>
     {% endblock %}
 
+    <script>
+        window.OFFLINE_AIRPORT_CONFIG = {
+            isAuthenticated: {{ user.is_authenticated|yesno:"true,false" }},
+            syncUrl: "{% url 'api-sync' %}",
+            serviceWorkerUrl: "{% url 'service-worker' %}",
+            offlineUrl: "{% url 'offline' %}",
+            dashboardUrl: "{% if user.is_authenticated %}{% url 'dashboard' %}{% endif %}"
+        };
+    </script>
+    <script src="{% static 'js/idb.js' %}" defer></script>
+    <script src="{% static 'js/app.js' %}" defer></script>
     <script src="{% static 'airport_helper/js/airport-map-data.js' %}" defer></script>
     <script src="{% static 'airport_helper/js/app.js' %}" defer></script>
     {% block extra_js %}{% endblock %}
