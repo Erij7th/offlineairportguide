@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Offline Airport Help{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+    <div class="dashboard-layout">
+        <section class="dashboard-command glass-card" data-reveal>
+            <div>
+                <p class="eyebrow">Today at a glance</p>
+                <h1>Welcome, <span class="gold-accent">{{ user.username }}</span>!</h1>
+                <div class="accent-line"></div>
+                <p class="dashboard-copy">Tickets, directions, and chat in one calm view.</p>
+            </div>
+            <a href="{% url 'ticket_create' %}" class="gold-button large-button"><i class="bi bi-qr-code-scan"></i> Scan Ticket</a>
+        </section>
+
+        <nav class="dashboard-quick-links" data-reveal aria-label="dashboard shortcuts">
+            <a href="#board" class="quick-link-card">
+                <i class="bi bi-grid-3x3-gap-fill"></i>
+                <span>Board</span>
+            </a>
+            <a href="#tickets" class="quick-link-card">
+                <i class="bi bi-ticket-perforated-fill"></i>
+                <span>Tickets</span>
+            </a>
+            <a href="#chat" class="quick-link-card">
+                <i class="bi bi-chat-dots-fill"></i>
+                <span>Chat</span>
+            </a>
+            <a href="#gps" class="quick-link-card">
+                <i class="bi bi-geo-alt-fill"></i>
+                <span>GPS</span>
+            </a>
+        </nav>
+
+        <section id="board" class="board-shell glass-card" data-reveal>
+            <div class="board-header">
+                <div>
+                    <p class="eyebrow">Flight view</p>
+                    <h2>Departure Board</h2>
+                </div>
+                <p class="board-caption">Flights at a glance</p>
+            </div>
+
+            <div class="departure-board">
+                <div class="board-head">
+                    <span class="board-cell">Flight</span>
+                    <span class="board-cell">Destination</span>
+                    <span class="board-cell">Gate</span>
+                    <span class="board-cell">Time</span>
+                    <span class="board-cell">Status</span>
+                </div>
+                {% if tickets %}
+                    {% for ticket in tickets %}
+                        <div class="board-row">
+                            <span class="board-cell"><i class="bi bi-airplane-fill"></i> {{ ticket.flight_number }}</span>
+                            <span class="board-cell">{{ ticket.destination }}</span>
+                            <span class="board-cell"><i class="bi bi-sign-turn-right-fill"></i> {{ ticket.gate }}</span>
+                            <span class="board-cell"><i class="bi bi-clock-fill"></i> {{ ticket.departure_time|date:"H:i" }}</span>
+                            <span class="board-cell board-status--{{ ticket.status }}">
+                                <span class="board-flip">{{ ticket.get_status_display }}</span>
+                            </span>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="board-row">
+                        <span class="board-cell"><i class="bi bi-airplane-fill"></i> --</span>
+                        <span class="board-cell">Save a ticket to see your board</span>
+                        <span class="board-cell"><i class="bi bi-sign-turn-right-fill"></i> --</span>
+                        <span class="board-cell"><i class="bi bi-clock-fill"></i> --:--</span>
+                        <span class="board-cell"><span class="board-flip">Waiting</span></span>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <div class="dashboard-columns">
+            <section id="tickets" class="panel" data-reveal>
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Saved passes</p>
+                        <h2>My Tickets</h2>
+                    </div>
+                    <a href="{% url 'ticket_create' %}" class="ghost-button"><i class="bi bi-plus-circle-fill"></i> Add</a>
+                </div>
+
+                {% if tickets %}
+                    <div class="ticket-grid">
+                        {% for ticket in tickets %}
+                            <article class="ticket-card">
+                                <div class="ticket-card-top">
+                                    <div>
+                                        <p class="ticket-label">{{ ticket.airline|default:"Saved flight" }}</p>
+                                        <h3>{{ ticket.flight_number }}</h3>
+                                    </div>
+                                    <span class="status-pill status-pill--{{ ticket.status }}">
+                                        <span class="status-dot status-dot--{{ ticket.status_color }}"></span>
+                                        <span class="board-flip">{{ ticket.get_status_display }}</span>
+                                    </span>
+                                </div>
+
+                                <div class="ticket-details">
+                                    <div class="ticket-detail">
+                                        <span>Destination</span>
+                                        <strong>{{ ticket.destination }}</strong>
+                                    </div>
+                                    <div class="ticket-detail">
+                                        <span>Gate</span>
+                                        <strong>{{ ticket.gate }}</strong>
+                                    </div>
+                                    <div class="ticket-detail">
+                                        <span>Time</span>
+                                        <strong>{{ ticket.departure_time|date:"M j, g:i A" }}</strong>
+                                    </div>
+                                    <div class="ticket-detail">
+                                        <span>Airport</span>
+                                        <strong>{{ ticket.departure_airport|default:"Saved offline" }}</strong>
+                                    </div>
+                                </div>
+
+                                {% if ticket.notes %}
+                                    <p class="ticket-notes">{{ ticket.notes }}</p>
+                                {% endif %}
+
+                                <div class="ticket-actions">
+                                    {% if ticket.boarding_pass %}
+                                        <a href="{{ ticket.boarding_pass.url }}" class="text-link">View pass</a>
+                                    {% endif %}
+                                    <form method="post" action="{% url 'ticket_delete' ticket.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="danger-link"><i class="bi bi-trash3-fill"></i> Delete</button>
+                                    </form>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><i class="bi bi-ticket-perforated-fill"></i></div>
+                        <h3>No ticket yet</h3>
+                        <p>Add one pass to wake up the dashboard.</p>
+                        <a href="{% url 'ticket_create' %}" class="gold-button"><i class="bi bi-qr-code-scan"></i> Scan Ticket</a>
+                    </div>
+                {% endif %}
+            </section>
+
+            <section id="chat" class="panel panel-chat" data-reveal>
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Friendly helper</p>
+                        <h2>Airport Chat</h2>
+                    </div>
+                </div>
+
+                <div class="chat-suggestions">
+                    <button type="button" class="suggestion-chip" data-chat-suggestion="What's my gate?"><i class="bi bi-airplane-fill"></i> My gate</button>
+                    <button type="button" class="suggestion-chip" data-chat-suggestion="Where am I?"><i class="bi bi-geo-alt-fill"></i> Where am I?</button>
+                    <button type="button" class="suggestion-chip" data-chat-suggestion="Find nearest coffee"><i class="bi bi-cup-hot-fill"></i> Coffee</button>
+                    <button type="button" class="suggestion-chip" data-chat-suggestion="How do I get to my gate?"><i class="bi bi-sign-turn-right-fill"></i> Directions</button>
+                </div>
+
+                <div class="chat-shell">
+                    <div class="chat-container" data-chat-log>
+                        {% for chat in chat_messages %}
+                            <div class="chat-message chat-message-{{ chat.role }}">
+                                {% if chat.role == "bot" %}
+                                    <div class="bot-avatar">
+                                        <span class="bot-avatar-orbit"></span>
+                                        <span class="bot-avatar-core">
+                                            <span class="bot-avatar-emoji" aria-hidden="true">&#128587;&#8205;&#9792;&#65039;</span>
+                                        </span>
+                                    </div>
+                                {% endif %}
+                                <div class="message-stack">
+                                    <div class="chat-bubble {% if chat.role == 'user' %}chat-bubble-user{% else %}chat-bubble-bot{% endif %}">
+                                        {{ chat.message|linebreaksbr }}
+                                    </div>
+                                    <span class="chat-timestamp">{{ chat.created_at|date:"g:i A" }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <form method="post" action="{% url 'chat_message' %}" class="chat-input-row" data-chat-form>
+                    {% csrf_token %}
+                    <input
+                        type="text"
+                        name="message"
+                        class="chat-input"
+                        placeholder="Gate, coffee, bathroom, baggage..."
+                        autocomplete="off"
+                    >
+                    <button type="submit" class="chat-send-button" aria-label="Send message"><i class="bi bi-arrow-up"></i></button>
+                </form>
+            </section>
+        </div>
+
+        <section
+            id="gps"
+            class="gps-section glass-card"
+            data-reveal
+            data-gps-app
+            data-default-airport="{% if tickets and tickets.0.departure_airport %}{{ tickets.0.departure_airport }}{% else %}JFK{% endif %}"
+            data-ticket-gate="{% if tickets %}{{ tickets.0.gate }}{% endif %}"
+            data-ticket-destination="{% if tickets %}{{ tickets.0.destination }}{% endif %}"
+        >
+            <div class="gps-topline">
+                <div>
+                    <p class="eyebrow">Live Airport GPS</p>
+                    <h2>Pick a stop and follow the route.</h2>
+                    <p class="gps-subcopy">Gates, coffee, restrooms, baggage.</p>
+                </div>
+                <div class="gps-airport-switch" data-airport-switch>
+                    <button type="button" class="airport-chip" data-airport-code="JFK">JFK</button>
+                    <button type="button" class="airport-chip" data-airport-code="LAX">LAX</button>
+                    <button type="button" class="airport-chip" data-airport-code="ORD">ORD</button>
+                </div>
+            </div>
+
+            <div class="gps-toolbar">
+                <form class="gps-search-form" data-gps-search>
+                    <label class="sr-only" for="gps-destination">Where do you want to go?</label>
+                    <input
+                        id="gps-destination"
+                        name="destination"
+                        class="gps-search-input"
+                        type="text"
+                        list="gps-destinations"
+                        placeholder="Gate, coffee, bathroom..."
+                        autocomplete="off"
+                    >
+                    <datalist id="gps-destinations"></datalist>
+                    <button type="submit" class="gold-button"><i class="bi bi-compass-fill"></i> Go</button>
+                </form>
+                <button type="button" class="ghost-button" data-locate-user><i class="bi bi-crosshair2"></i> Use my location</button>
+            </div>
+
+            <form class="gps-manual-form" data-gps-origin-form>
+                <label class="sr-only" for="gps-current-location">I'm at...</label>
+                <input
+                    id="gps-current-location"
+                    class="gps-origin-input"
+                    type="text"
+                    list="gps-current-locations"
+                    placeholder="I'm at Starbucks, Gate B23, baggage claim..."
+                    autocomplete="off"
+                >
+                <datalist id="gps-current-locations"></datalist>
+                <button type="submit" class="ghost-button"><i class="bi bi-geo-fill"></i> Set my spot</button>
+            </form>
+
+            <div class="gps-shortcuts">
+                <button type="button" class="gps-chip" data-gps-target="gate"><i class="bi bi-airplane-fill"></i> Gate</button>
+                <button type="button" class="gps-chip" data-gps-target="coffee"><i class="bi bi-cup-hot-fill"></i> Coffee</button>
+                <button type="button" class="gps-chip" data-gps-target="bathroom"><i class="bi bi-door-open-fill"></i> Bathroom</button>
+                <button type="button" class="gps-chip" data-gps-target="baggage"><i class="bi bi-briefcase-fill"></i> Baggage</button>
+                <button type="button" class="gps-chip" data-gps-target="food"><i class="bi bi-egg-fried"></i> Food</button>
+            </div>
+
+            <div class="gps-layout">
+                <div class="gps-map-shell">
+                    <div class="gps-meta-strip">
+                        <span class="gps-status" data-gps-status><i class="bi bi-geo-alt-fill"></i> Location off</span>
+                        <span class="gps-estimate-pill" data-gps-summary>Choose a stop</span>
+                    </div>
+                    <div class="gps-map" data-gps-map aria-live="polite">
+                        <div class="airport-map-empty">Airport map is loading...</div>
+                    </div>
+                </div>
+
+                <aside class="gps-directions-panel">
+                    <div class="gps-direction-hero">
+                        <div class="gps-direction-arrow" data-gps-direction-arrow>⬆️</div>
+                        <div class="gps-direction-copy">
+                            <span>Next move</span>
+                            <strong data-gps-primary-step>Click a place on the map</strong>
+                            <p data-gps-next-step>Then your next turn will appear here.</p>
+                        </div>
+                    </div>
+                    <div class="gps-stat-grid">
+                        <article class="gps-stat-card">
+                            <span>Selected airport</span>
+                            <strong data-gps-airport-name>JFK</strong>
+                        </article>
+                        <article class="gps-stat-card">
+                            <span>Estimated walk</span>
+                            <strong data-gps-estimate>0 min</strong>
+                        </article>
+                        <article class="gps-stat-card">
+                            <span>Distance left</span>
+                            <strong data-gps-distance-remaining>0 ft</strong>
+                        </article>
+                        <article class="gps-stat-card">
+                            <span>Destination</span>
+                            <strong data-gps-destination>Pick a stop</strong>
+                        </article>
+                    </div>
+                    <div class="gps-directions-shell">
+                        <h3>Turn-by-turn</h3>
+                        <ol class="directions-list" data-gps-directions>
+                            <li>Choose a destination to draw your route.</li>
+                        </ol>
+                    </div>
+                </aside>
+            </div>
+        </section>
+    </div>
+{% endblock %}

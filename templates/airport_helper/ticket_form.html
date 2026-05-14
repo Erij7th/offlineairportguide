@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Scan New Ticket | Offline Airport Help{% endblock %}
+
+{% block content %}
+    <section class="ticket-page">
+        <div class="section-heading left-aligned">
+            <p class="eyebrow">📸 Scan New Ticket</p>
+            <h1>Save your next flight beautifully and offline.</h1>
+            <p class="dashboard-copy">
+                Add your flight details, upload a boarding pass photo or PDF, and keep the essentials ready even when
+                the terminal internet disappears.
+            </p>
+        </div>
+
+        <div class="ticket-form-layout">
+            <div class="form-card">
+                <form method="post" enctype="multipart/form-data" class="form-grid">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="form-errors">{{ form.non_field_errors }}</div>
+                    {% endif %}
+
+                    {% for field in form %}
+                        <div class="field-shell {% if field.name == 'notes' %}field-shell-full{% endif %}">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <small class="field-help">{{ field.help_text }}</small>
+                            {% endif %}
+                            {% if field.errors %}
+                                <div class="field-errors">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="form-actions field-shell-full">
+                        <button type="submit" class="gold-button large-button">💾 Save Ticket Offline</button>
+                        <a href="{% url 'dashboard' %}" class="text-link">Back to dashboard</a>
+                    </div>
+                </form>
+            </div>
+
+            <aside class="tips-card">
+                <div class="tip-item">
+                    <span>💙</span>
+                    <div>
+                        <h3>Keep it simple</h3>
+                        <p>Flight number, destination, gate, and departure time are the essentials.</p>
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <span>✨</span>
+                    <div>
+                        <h3>Photo or PDF works</h3>
+                        <p>Attach the boarding pass file you already have, then use the dashboard chat for quick help.</p>
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <span>☕</span>
+                    <div>
+                        <h3>Ask while you wait</h3>
+                        <p>Once saved, the assistant can answer gate, food, restroom, and boredom questions.</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </section>
+{% endblock %}

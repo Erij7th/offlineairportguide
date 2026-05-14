@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Log In | Offline Airport Help{% endblock %}
+
+{% block content %}
+    <section class="auth-layout">
+        <div class="auth-copy-panel">
+            <p class="eyebrow">💙 Friendly, secure, and ready when you are</p>
+            <h1>Log in and pick up right where your trip left off.</h1>
+            <p class="dashboard-copy">
+                Your saved tickets, travel notes, and airport buddy chat are waiting for you inside.
+            </p>
+        </div>
+
+        <div class="auth-card">
+            <p class="eyebrow">Welcome back</p>
+            <h2>Log In</h2>
+
+            <div class="social-stack">
+                <button type="button" class="social-button" data-focus-target="id_username">✉️ Continue with username</button>
+                <button type="button" class="social-button" data-focus-target="id_password">🔐 Secure password entry</button>
+                <a href="{% url 'home' %}" class="social-button">✨ See how it works</a>
+            </div>
+
+            <div class="divider"><span>or use your account details</span></div>
+
+            <form method="post" class="form-stack">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="form-errors">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="field-shell">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="field-errors">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="primary-button auth-submit">Log In</button>
+            </form>
+
+            <p class="auth-link">Need an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+        </div>
+    </section>
+{% endblock %}

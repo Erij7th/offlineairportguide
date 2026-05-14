@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0A1128">
+    <title>{% block title %}Offline Airport Help{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'airport_helper/css/app.css' %}">
+    <noscript><style>[data-loader]{display:none!important;}</style></noscript>
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <div class="lux-loader" data-loader>
+        <div class="loader-shell">
+            <div class="loader-orbit" aria-hidden="true">
+                <span class="loader-plane"><i class="bi bi-airplane-engines-fill"></i></span>
+            </div>
+            <div class="loader-copy">
+                <h2>Preparing your airport concierge</h2>
+                <p>Luxury guidance, cached for calm travel.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="particle-field" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="cloud-layer" aria-hidden="true">
+        <span class="cloud cloud-one"></span>
+        <span class="cloud cloud-two"></span>
+        <span class="cloud cloud-three"></span>
+    </div>
+    <div class="floating-planes" aria-hidden="true">
+        <span class="floating-plane plane-one"><i class="bi bi-airplane-fill"></i></span>
+        <span class="floating-plane plane-two"><i class="bi bi-airplane-fill"></i></span>
+    </div>
+    <div class="runway-lights" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="site-frame">
+        <header class="site-header">
+            <a href="{% url 'home' %}" class="brand-mark" aria-label="Offline Airport Help home">
+                <span class="brand-plane"><i class="bi bi-airplane-fill"></i></span>
+                <span class="brand-wordmark">
+                    <span class="brand-title">Offline Airport Help</span>
+                    <span class="brand-subtitle">Luxury airport guidance, offline</span>
+                </span>
+            </a>
+
+            <nav class="site-nav">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="ghost-button">Dashboard</a>
+                    <form method="post" action="{% url 'logout' %}" class="nav-form">
+                        {% csrf_token %}
+                        <button type="submit" class="primary-button small-button">Log Out</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'signup' %}" class="ghost-button">Sign Up</a>
+                    <a href="{% url 'login' %}" class="gold-button small-button">Log In</a>
+                {% endif %}
+            </nav>
+        </header>
+
+        {% if messages %}
+            <div class="flash-stack">
+                {% for message in messages %}
+                    <div class="flash flash--{{ message.tags|default:'info' }}" data-flash>{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <main class="page-transition">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    {% block footer %}
+        <footer class="site-footer full-bleed">
+            <div class="site-footer-inner">
+                <div class="footer-brand">
+                    <strong>Offline Airport Help</strong>
+                    <span>Offline. Private. Stress-Free Travel.</span>
+                </div>
+                <div class="footer-social" aria-label="social links">
+                    <a href="{% url 'home' %}" aria-label="Flights"><i class="bi bi-airplane-fill"></i></a>
+                    <a href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'signup' %}{% endif %}" aria-label="Departures"><i class="bi bi-send-fill"></i></a>
+                    <a href="{% url 'home' %}#how-it-works" aria-label="Arrivals"><i class="bi bi-compass-fill"></i></a>
+                </div>
+                <p class="footer-copy">&copy; 2026 Offline Airport Help &middot; Travel stress-free</p>
+            </div>
+        </footer>
+    {% endblock %}
+
+    <script src="{% static 'airport_helper/js/airport-map-data.js' %}" defer></script>
+    <script src="{% static 'airport_helper/js/app.js' %}" defer></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

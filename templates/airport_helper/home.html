@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Offline Airport Help{% endblock %}
+{% block body_class %}home-page{% endblock %}
+
+{% block content %}
+    <section class="luxe-hero full-bleed">
+        <div class="hero-cinematic" aria-hidden="true"></div>
+
+        <div class="hero-content-shell">
+            <div class="hero-glass-card" data-reveal>
+                <div class="hero-ribbon">
+                    <i class="bi bi-stars"></i>
+                    <span>Offline airport comfort</span>
+                </div>
+                <p class="eyebrow">Smart airport flow</p>
+                <h1>Your Personal AI Airport Concierge</h1>
+                <p class="hero-subtitle">Offline, private, and easy to follow.</p>
+                <p class="hero-description">
+                    Save your pass, open the map, and keep moving without airport stress.
+                </p>
+                <div class="hero-actions">
+                    <a href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'signup' %}{% endif %}" class="gold-button large-button">Start Journey <span aria-hidden="true">&rarr;</span></a>
+                    <a href="#how-it-works" class="ghost-button">See Features</a>
+                </div>
+                <div class="hero-badges">
+                    <span class="hero-badge"><i class="bi bi-ticket-perforated-fill"></i> Save ticket</span>
+                    <span class="hero-badge"><i class="bi bi-geo-alt-fill"></i> Find gate</span>
+                    <span class="hero-badge"><i class="bi bi-chat-dots-fill"></i> Chat guide</span>
+                </div>
+            </div>
+
+            <div class="hero-side-column">
+                <div class="hero-metrics" data-reveal>
+                    <article class="mini-visual-card">
+                        <i class="bi bi-wifi-off"></i>
+                        <strong>Offline</strong>
+                        <span>Ready anytime</span>
+                    </article>
+                    <article class="mini-visual-card">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <strong>3 Airports</strong>
+                        <span>JFK, LAX, ORD</span>
+                    </article>
+                    <article class="mini-visual-card">
+                        <i class="bi bi-cup-hot-fill"></i>
+                        <strong>Quick Stops</strong>
+                        <span>Coffee, food, restrooms</span>
+                    </article>
+                    <article class="mini-visual-card">
+                        <i class="bi bi-chat-heart-fill"></i>
+                        <strong>Friendly Chat</strong>
+                        <span>Help while you wait</span>
+                    </article>
+                </div>
+
+                <article class="glass-card visual-route" data-reveal>
+                    <p class="eyebrow">Simple flow</p>
+                    <div class="route-pill-row">
+                        <span class="route-pill"><i class="bi bi-qr-code-scan"></i> Scan</span>
+                        <span class="route-pill"><i class="bi bi-compass-fill"></i> Navigate</span>
+                        <span class="route-pill"><i class="bi bi-chat-dots-fill"></i> Ask</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-shell" id="how-it-works">
+        <div class="section-heading" data-reveal>
+            <p class="eyebrow">Fast and clear</p>
+            <h2>How It Works</h2>
+        </div>
+        <div class="glass-grid four-up">
+            <article class="feature-card" data-reveal>
+                <div class="feature-icon"><i class="bi bi-qr-code-scan"></i></div>
+                <h3>Scan</h3>
+                <p>Upload your boarding pass once.</p>
+            </article>
+            <article class="feature-card" data-reveal>
+                <div class="feature-icon"><i class="bi bi-wifi-off"></i></div>
+                <h3>Save</h3>
+                <p>Keep ticket details offline.</p>
+            </article>
+            <article class="feature-card" data-reveal>
+                <div class="feature-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                <h3>Navigate</h3>
+                <p>Open gates, coffee, and restrooms.</p>
+            </article>
+            <article class="feature-card" data-reveal>
+                <div class="feature-icon"><i class="bi bi-chat-dots-fill"></i></div>
+                <h3>Chat</h3>
+                <p>Ask quick questions on the go.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section-shell">
+        <div class="section-heading" data-reveal>
+            <p class="eyebrow">Made to feel lighter</p>
+            <h2>Why it feels easy</h2>
+        </div>
+        <div class="glass-grid three-up">
+            <article class="feature-card" data-reveal>
+                <div class="feature-icon"><i class="bi bi-grid-3x3-gap-fill"></i></div>
+                <h3>One view</h3>
+                <p>Tickets, board, map, and chat stay organized.</p>
+            </article>
+            <article class="feature-card" data-reveal>
+                <div class="feature-icon"><i class="bi bi-signpost-split-fill"></i></div>
+                <h3>Fewer taps</h3>
+                <p>Quick buttons get you where you need to go.</p>
+            </article>
+            <article class="feature-card" data-reveal>
+                <div class="feature-icon"><i class="bi bi-shield-lock-fill"></i></div>
+                <h3>Private</h3>
+                <p>Your travel helper keeps working offline.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section-shell">
+        <div class="section-heading" data-reveal>
+            <p class="eyebrow">Keep the essentials close</p>
+            <h2>Everything in one calm place</h2>
+        </div>
+        <div class="benefits-card benefits-grid" data-reveal>
+            <div class="benefit-row"><i class="bi bi-check2-circle"></i><span>Gate changes</span></div>
+            <div class="benefit-row"><i class="bi bi-check2-circle"></i><span>Bathroom finder</span></div>
+            <div class="benefit-row"><i class="bi bi-check2-circle"></i><span>Coffee stops</span></div>
+            <div class="benefit-row"><i class="bi bi-check2-circle"></i><span>Walking time</span></div>
+            <div class="benefit-row"><i class="bi bi-check2-circle"></i><span>Saved tickets</span></div>
+            <div class="benefit-row"><i class="bi bi-check2-circle"></i><span>Offline map</span></div>
+        </div>
+    </section>
+{% endblock %}

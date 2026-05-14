@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up | Offline Airport Help{% endblock %}
+
+{% block content %}
+    <section class="auth-layout">
+        <div class="auth-copy-panel">
+            <p class="eyebrow">✨ Made for calm travel days</p>
+            <h1>Create your account and keep airport details close, even offline.</h1>
+            <p class="dashboard-copy">
+                Save tickets, stay organized, and chat with a friendly assistant that helps with the little things.
+            </p>
+        </div>
+
+        <div class="auth-card">
+            <p class="eyebrow">Join the travel-friendly side</p>
+            <h2>Sign Up</h2>
+
+            <div class="social-stack">
+                <button type="button" class="social-button" data-focus-target="id_username">✈️ Start with a username</button>
+                <button type="button" class="social-button" data-focus-target="id_email">💌 Add your email</button>
+                <a href="{% url 'login' %}" class="social-button">💙 Already have an account?</a>
+            </div>
+
+            <div class="divider"><span>or create your account below</span></div>
+
+            <form method="post" class="form-stack">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="form-errors">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="field-shell">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small class="field-help">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="field-errors">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="primary-button auth-submit">Create Account</button>
+            </form>
+
+            <p class="auth-link">Already signed up? <a href="{% url 'login' %}">Log in here</a></p>
+        </div>
+    </section>
+{% endblock %}
