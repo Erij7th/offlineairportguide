@@ -89,13 +89,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "offline_airport_help.wsgi.application"
 
+import os
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ayer-db",
+        "NAME": "ayer",
         "USER": "postgres",
-        "PASSWORD": os.environ.get("Wackycoral96"),
-        "HOST": "/cloudsql/project-d23a8f3d-6612-4ea2-91a:us-east4:ayer-db",
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": os.environ.get("DB_HOST"),
         "PORT": "5432",
     }
 }
