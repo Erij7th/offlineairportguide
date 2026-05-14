@@ -89,13 +89,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "offline_airport_help.wsgi.application"
 
+CLOUD_SQL_CONNECTION_NAME = os.environ.get("CLOUD_SQL_CONNECTION_NAME")
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ayer",
-        "USER": "postgres",
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
         "PASSWORD": os.environ.get("DB_PASSWORD"),
-        "HOST": os.environ.get("DB_HOST"),
+        "HOST": f"/cloudsql/{CLOUD_SQL_CONNECTION_NAME}",
         "PORT": "5432",
     }
 }
@@ -181,5 +183,9 @@ LOGGING = {
         },
     },
 }
+
+print("CLOUD_SQL_CONNECTION_NAME =", os.environ.get("CLOUD_SQL_CONNECTION_NAME"))
+print("DB_NAME =", os.environ.get("DB_NAME"))
+print("DB_USER =", os.environ.get("DB_USER"))
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
