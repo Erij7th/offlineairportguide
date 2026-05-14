@@ -1,36 +1,36 @@
-import logging
 import threading
 
 from django.core.management import call_command
-
-
-logger = logging.getLogger(__name__)
-_migration_check_complete = False
-_migration_check_lock = threading.Lock()
+from django.db import connection
 
 
 class EnsureMigratedMiddleware:
+    _has_run = False
+    _lock = threading.Lock()
+
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        self._ensure_migrated_once()
+        if not self.__class__._has_run:
+            with self.__class__._lock:
+                if not self.__class__._has_run:
+                    self._ensure_migrated()
+                    self.__class__._has_run = True
+
         return self.get_response(request)
 
-    def _ensure_migrated_once(self):
-        global _migration_check_complete
+    def _ensure_migrated(self):
+        try:
+            print("[EnsureMigratedMiddleware] Checking for auth_user table...")
+            existing_tables = connection.introspection.table_names()
 
-        if _migration_check_complete:
-            return
-
-        with _migration_check_lock:
-            if _migration_check_complete:
+            if "auth_user" in existing_tables:
+                print("[EnsureMigratedMiddleware] auth_user table already exists. Skipping migrations.")
                 return
 
-            try:
-                logger.info("Running ensure_migrated check on first request.")
-                call_command("ensure_migrated")
-            except Exception:
-                logger.exception("ensure_migrated failed during request startup.")
-            finally:
-                _migration_check_complete = True
+            print("[EnsureMigratedMiddleware] auth_user table missing. Running migrations now...")
+            call_command("migrate", interactive=False, run_syncdb=True, verbosity=1)
+            print("[EnsureMigratedMiddleware] Migrations completed successfully.")
+        except Exception as exc:
+            print(f"[EnsureMigratedMiddleware] Migration check failed: {exc}")
