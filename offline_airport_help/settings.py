@@ -89,16 +89,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "offline_airport_help.wsgi.application"
 
-DATA_DIR = BASE_DIR / "data"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": DATA_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "ayer-db",
+        "USER": "postgres",
+        "PASSWORD": os.environ.get("Wackycoral96"),
+        "HOST": "/cloudsql/project-d23a8f3d-6612-4ea2-91a:us-east4:ayer-db",
+        "PORT": "5432",
     }
 }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
