@@ -18,11 +18,11 @@ SECRET_KEY = os.environ.get(
 )
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = [
-    "ayer.qzz.io",
-    "www.ayer.qzz.io",
-    ".run.app",
-    "localhost",
-    "127.0.0.1",
+    'ayer.qzz.io',
+    'www.ayer.qzz.io', 
+    'localhost',
+    '127.0.0.1',
+    'offlineairplaneguide-304611761196.us-east4.run.app',  # For testing
 ]
 CSRF_TRUSTED_ORIGINS = [
     "https://ayer.qzz.io",
