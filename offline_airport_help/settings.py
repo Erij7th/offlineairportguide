@@ -59,7 +59,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "airport_helper.middleware.EnsureMigratedMiddleware",
     "corsheaders.middleware.CorsMiddleware",  # Move to top
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
