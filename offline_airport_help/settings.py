@@ -17,16 +17,19 @@ SECRET_KEY = os.environ.get(
     "django-insecure-ajoua9-59x!+lm7@2f!zg#44mr=y!z6@l4ncqe)q6a$zmh2_0h",
 )
 DEBUG = False
+
 ALLOWED_HOSTS = [
     'ayer.qzz.io',
-    'www.ayer.qzz.io', 
+    'www.ayer.qzz.io',
+    'offlineairplaneguide-304611761196.us-east4.run.app',
     'localhost',
     '127.0.0.1',
-    'offlineairplaneguide-304611761196.us-east4.run.app',  # For testing
 ]
+
 CSRF_TRUSTED_ORIGINS = [
     "https://ayer.qzz.io",
     "https://www.ayer.qzz.io",
+    "https://offlineairplaneguide-304611761196.us-east4.run.app",
 ]
 CSRF_COOKIE_DOMAIN = ".ayer.qzz.io"
 CSRF_COOKIE_SECURE = True
@@ -89,16 +92,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "offline_airport_help.wsgi.application"
 
-CLOUD_SQL_CONNECTION_NAME = os.environ.get("CLOUD_SQL_CONNECTION_NAME")
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DB_NAME"),
-        "USER": os.environ.get("DB_USER"),
-        "PASSWORD": os.environ.get("DB_PASSWORD"),
-        "HOST": f"/cloudsql/{CLOUD_SQL_CONNECTION_NAME}",
-        "PORT": "5432",
+        "NAME": os.environ.get("DB_NAME", ""),
+        "USER": os.environ.get("DB_USER", ""),
+        "PASSWORD": os.environ.get("DB_PASSWORD", ""),
+        "HOST": os.environ.get(
+            "DB_HOST",
+            f"/cloudsql/{os.environ.get('INSTANCE_CONNECTION_NAME', 'project-d23a8f3d-6612-4ea2-91a:us-east4:ayer-db')}",
+        ),
+        "PORT": os.environ.get("DB_PORT", "5432"),
+        "CONN_MAX_AGE": 600,
     }
 }
 
@@ -183,9 +188,5 @@ LOGGING = {
         },
     },
 }
-
-print("CLOUD_SQL_CONNECTION_NAME =", os.environ.get("CLOUD_SQL_CONNECTION_NAME"))
-print("DB_NAME =", os.environ.get("DB_NAME"))
-print("DB_USER =", os.environ.get("DB_USER"))
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
