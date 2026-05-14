@@ -1,0 +1,26 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - us-east4-docker.pkg.dev/project-d23a8f3d-6612-4ea2-91a/cloud-run-source-deploy/offlineairportguide:latest
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - us-east4-docker.pkg.dev/project-d23a8f3d-6612-4ea2-91a/cloud-run-source-deploy/offlineairportguide:latest
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - offlineairplaneguide
+      - --image=us-east4-docker.pkg.dev/project-d23a8f3d-6612-4ea2-91a/cloud-run-source-deploy/offlineairportguide:latest
+      - --region=us-east4
+      - --platform=managed
+      - --allow-unauthenticated
+
+images:
+  - us-east4-docker.pkg.dev/project-d23a8f3d-6612-4ea2-91a/cloud-run-source-deploy/offlineairportguide:latest
