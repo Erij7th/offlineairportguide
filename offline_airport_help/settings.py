@@ -92,7 +92,7 @@ WSGI_APPLICATION = "offline_airport_help.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ayer-db",
+        "NAME": "ayer",
         "USER": "postgres",
         "PASSWORD": os.environ.get("DB_PASSWORD"),
         "HOST": os.environ.get("DB_HOST"),
