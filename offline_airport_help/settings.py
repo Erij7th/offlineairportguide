@@ -89,8 +89,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "offline_airport_help.wsgi.application"
 
-import os
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
