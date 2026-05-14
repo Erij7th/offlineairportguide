@@ -1,15 +1,21 @@
+import logging
+
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
+from django.core.management import call_command
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.views.decorators.http import require_GET
 from django.views.decorators.http import require_POST
 
 from .chatbot import build_bot_reply
 from .forms import SignUpForm, StyledAuthenticationForm, TicketForm
 from .models import ChatMessage, Ticket
+
+logger = logging.getLogger(__name__)
 
 
 def home(request):
@@ -140,6 +146,27 @@ def chat_message(request):
             "bot": _serialize_message(bot_message),
         }
     )
+
+
+@require_GET
+def init_db(request):
+    try:
+        call_command("ensure_migrated")
+        return JsonResponse(
+            {
+                "status": "ok",
+                "message": "Database initialization check completed.",
+            }
+        )
+    except Exception:
+        logger.exception("Manual database initialization failed.")
+        return JsonResponse(
+            {
+                "status": "error",
+                "message": "Database initialization failed.",
+            },
+            status=500,
+        )
 
 
 def _serialize_message(message):
