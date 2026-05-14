@@ -31,11 +31,9 @@ CSRF_TRUSTED_ORIGINS = [
     "https://www.ayer.qzz.io",
     "https://offlineairplaneguide-304611761196.us-east4.run.app",
 ]
-CSRF_COOKIE_DOMAIN = ".ayer.qzz.io"
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = "Lax"
-SESSION_COOKIE_DOMAIN = ".ayer.qzz.io"
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"
@@ -92,20 +90,28 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "offline_airport_help.wsgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DB_NAME", ""),
-        "USER": os.environ.get("DB_USER", ""),
-        "PASSWORD": os.environ.get("DB_PASSWORD", ""),
-        "HOST": os.environ.get(
-            "DB_HOST",
-            f"/cloudsql/{os.environ.get('INSTANCE_CONNECTION_NAME', 'project-d23a8f3d-6612-4ea2-91a:us-east4:ayer-db')}",
-        ),
-        "PORT": os.environ.get("DB_PORT", "5432"),
-        "CONN_MAX_AGE": 600,
+if os.environ.get("DB_NAME"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ.get("DB_NAME"),
+            "USER": os.environ.get("DB_USER"),
+            "PASSWORD": os.environ.get("DB_PASSWORD"),
+            "HOST": os.environ.get(
+                "DB_HOST",
+                f"/cloudsql/{os.environ.get('INSTANCE_CONNECTION_NAME')}",
+            ),
+            "PORT": os.environ.get("DB_PORT", "5432"),
+            "CONN_MAX_AGE": 600,
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": DATA_DIR / "db.sqlite3",
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {

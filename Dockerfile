@@ -10,9 +10,11 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
+COPY entrypoint.sh /app/entrypoint.sh
 
 RUN python manage.py collectstatic --noinput
+RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8080
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "offline_airport_help.wsgi:application"]
+ENTRYPOINT ["/app/entrypoint.sh"]
