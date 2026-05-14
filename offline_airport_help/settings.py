@@ -14,7 +14,12 @@ DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 SECRET_KEY = "django-insecure-ajoua9-59x!+lm7@2f!zg#44mr=y!z6@l4ncqe)q6a$zmh2_0h"
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+	'ayer.qzz.io',
+	'www.ayer.qzz.io',
+    	'localhost',
+    	'127.0.0.1',
+]
 
 
 INSTALLED_APPS = [
