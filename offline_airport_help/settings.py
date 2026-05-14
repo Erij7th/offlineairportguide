@@ -17,6 +17,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
 	'ayer.qzz.io',
 	'www.ayer.qzz.io',
+	'https://ayer.qzz.io/',
     	'localhost',
     	'127.0.0.1',
 ]
