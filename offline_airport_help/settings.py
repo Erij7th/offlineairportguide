@@ -16,7 +16,7 @@ SECRET_KEY = os.environ.get(
     "SECRET_KEY",
     "django-insecure-ajoua9-59x!+lm7@2f!zg#44mr=y!z6@l4ncqe)q6a$zmh2_0h",
 )
-DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+DEBUG = False
 ALLOWED_HOSTS = [
     'ayer.qzz.io',
     'www.ayer.qzz.io', 
@@ -59,6 +59,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "airport_helper.middleware.EnsureMigratedMiddleware",
     "corsheaders.middleware.CorsMiddleware",  # Move to top
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -159,6 +160,11 @@ LOGGING = {
         },
     },
     "loggers": {
+        "airport_helper": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
         "django.security.csrf": {
             "handlers": ["console"],
             "level": "ERROR",
